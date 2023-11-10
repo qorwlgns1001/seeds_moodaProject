@@ -57,12 +57,15 @@ public class UserService {
     public void edit (UserDto userDto, String loginId) {
         User loginUser = userRepository.findByLoginId(loginId).get(); // repository 에서 Id에 해당하는 유저 얻기
 
-        if (userDto.getNewPassword().equals("")) {
+        if (userDto.getNewPassword().equals("")) { // 비밀번호를 변경하지 않았을경우
             loginUser.edit(loginUser.getPassword(), userDto.getNickname());
+        }
+        else {
+            loginUser.edit(userDto.getNewPassword(), userDto.getNickname());
         }
     }
 
-    public BindingResult editValidPassword (UserDto userDto, BindingResult bindingResult, String loginId) {
+    public BindingResult editValid (UserDto userDto, BindingResult bindingResult, String loginId) {
         User loginUser = userRepository.findByLoginId(loginId).get();
 
         if (userDto.getNowPassword().isEmpty()) {
@@ -81,12 +84,30 @@ public class UserService {
         if (userDto.getNewPasswordCheck().isEmpty()) {
             bindingResult.addError(new FieldError("userDto", "newPasswordCheck", "새로운 비밀번호 확인란이 비어있습니다."));
         }
+
+        if (userDto.getNickname().isEmpty()) {
+            bindingResult.addError(new FieldError("userDto", "nickname", "닉네임이 비어있습니다."));
+        }
+        else if (userDto.getNickname().length() < 3 || userDto.getNickname().length() > 10) {
+            bindingResult.addError(new FieldError("userDto", "nickname", "닉네임은 3자 이상 10자 이하로 설정해주세요."));
+        }
+        else if (!userDto.getNickname().equals(loginUser.getNickname()) && userRepository.existsByNickname(userDto.getNickname())) {
+            bindingResult.addError(new FieldError("userDto", "nickname", "닉네임이 이미 사용중입니다."));
+        }
+
         return bindingResult;
     }
 
-    public BindingResult editValidNickname (UserDto userDto, BindingResult bindingResult, String loginId) {
+    @Transactional
+    public Boolean delete(String loginId, String password) {
         User loginUser = userRepository.findByLoginId(loginId).get();
 
-        if ()
+        if (password.equals(loginUser.getPassword())) {
+            userRepository.delete(loginUser);
+            return true;
+        } else {
+            return false;
+        }
+
     }
 }
