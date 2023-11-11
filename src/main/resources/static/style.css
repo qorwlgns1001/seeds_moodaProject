@@ -21,10 +21,13 @@ nav {
     width: 15%;
     height: 700px;
     float: right;
-    background-color: aliceblue;
+    background-color: chartreuse;
 
 }
 
 article {
-
+    background-color: aliceblue;
+    margin: 0;
+    padding: 0;
+    height: 700px;
 }
