@@ -3,6 +3,7 @@ package Seeds.mooda_project.dto;
 import Seeds.mooda_project.domain.User;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 
@@ -18,7 +19,7 @@ public class UserJoinRequest { // 회원가입시 사용되면 DTO
                 .loginId(loginId)
                 .password(password)
                 .nickname(nickname)
-                .createdTime(LocalDateTime.now())
+                .createdDate(LocalDateTime.now())
                 .build();
     }
 }

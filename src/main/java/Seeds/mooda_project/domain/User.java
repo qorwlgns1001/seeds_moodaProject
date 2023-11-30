@@ -2,6 +2,8 @@ package Seeds.mooda_project.domain;
 import jakarta.persistence.*;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.net.PasswordAuthentication;
 import java.time.LocalDateTime;
@@ -16,21 +18,34 @@ import java.time.LocalDateTime;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "user_id")
+    private Long id; // primary Key
 
-    @NonNull
-    @Column(unique = true, length = 10)
+    @Column(nullable = false, length = 30, unique = true)
     private String loginId; // 로그인시 사용하는 ID
+    @Column(nullable = false, length = 30)
+    private String username; // 유저 이름(실명)
+    @Column(nullable = false, length = 30, unique = true)
     private String nickname; // 닉네임
     private String password; // 비밀번호
     private String passwordCheck; // 비밀번호 확인
-    private LocalDateTime createdTime; // 회원가입된 시간
+    @CreatedDate @Column(updatable = false)
+    private LocalDateTime createdDate; // 회원가입된 시간
+    @LastModifiedDate @Column(updatable = false)
+    private LocalDateTime lastModifiedDate;
 
 
-    public void edit(String newPassword, String newNickname) {
-        this.password = newPassword;
-        this.passwordCheck = newPassword;
-        this.nickname = newNickname;
+    public void editNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void editUsername(String username){
+        this.username = username;
+    }
+
+    public void editPassword(String password) {
+        this.password = password;
+        passwordCheck = password;
     }
 
 }

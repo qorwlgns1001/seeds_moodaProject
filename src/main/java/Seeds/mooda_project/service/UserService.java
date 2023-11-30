@@ -10,6 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
+import java.util.List;
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -53,17 +56,17 @@ public class UserService {
         return bindingResult;
     }
 
-    @Transactional
-    public void edit (UserDto userDto, String loginId) {
-        User loginUser = userRepository.findByLoginId(loginId).get(); // repository 에서 Id에 해당하는 유저 얻기
-
-        if (userDto.getNewPassword().equals("")) { // 비밀번호를 변경하지 않았을경우
-            loginUser.edit(loginUser.getPassword(), userDto.getNickname());
-        }
-        else {
-            loginUser.edit(userDto.getNewPassword(), userDto.getNickname());
-        }
-    }
+//    @Transactional
+//    public void edit (UserDto userDto, String loginId) {
+//        User loginUser = userRepository.findByLoginId(loginId).get(); // repository 에서 Id에 해당하는 유저 얻기
+//
+//        if (userDto.getNewPassword().equals("")) { // 비밀번호를 변경하지 않았을경우
+//            loginUser.edit(loginUser.getPassword(), userDto.getNickname());
+//        }
+//        else {
+//            loginUser.edit(userDto.getNewPassword(), userDto.getNickname());
+//        }
+//    }
 
     public BindingResult editValid (UserDto userDto, BindingResult bindingResult, String loginId) {
         User loginUser = userRepository.findByLoginId(loginId).get();
@@ -109,5 +112,9 @@ public class UserService {
             return false;
         }
 
+    }
+
+    public List<User> getAllUserList() {
+        return userRepository.findAll();
     }
 }

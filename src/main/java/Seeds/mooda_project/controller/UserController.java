@@ -1,6 +1,8 @@
 package Seeds.mooda_project.controller;
 
+import Seeds.mooda_project.domain.User;
 import Seeds.mooda_project.dto.UserJoinRequest;
+import Seeds.mooda_project.repository.UserRepository;
 import Seeds.mooda_project.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -9,11 +11,16 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @GetMapping("/join")
     public String joinPage(Model model) {
@@ -36,4 +43,17 @@ public class UserController {
         model.addAttribute("nextUrl", "/users/login");
         return "users/printMessage";
     }
+
+
+    @GetMapping("/{id}")
+    public Optional<User> getUserProfile(@PathVariable("id") Long id) {
+        return userRepository.findById(id);
+    }
+
+    @GetMapping("/all")
+    public List<User> getAllUserProfile() {
+        //return userRepository.findAll();
+        return userService.getAllUserList();
+    }
+
 }
